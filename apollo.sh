@@ -483,7 +483,7 @@ function build_additional_ros_packages() {
   source "${ROS_PATH}/setup.bash"
 
   cd modules
-  catkin_make_isolated --install --source additional_ros_packages \
+  catkin_make_isolated --install --source additional_ros_packages/object_tracker \
     --install-space "${ROS_PATH}" -DCMAKE_BUILD_TYPE=Release -DSETUPTOOLS_DEB_LAYOUT=OFF \
     --cmake-args --no-warn-unused-cli
   find "${ROS_PATH}" -name "*.pyc" -print0 | xargs -0 rm -rf
