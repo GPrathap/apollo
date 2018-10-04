@@ -1,5 +1,5 @@
-#include <tensorflow_catkin/core/public/session.h>
-#include <tensorflow_catkin/core/platform/env.h>
+#include <tensorflow/core/public/session.h>
+#include <tensorflow/core/platform/env.h>
 #include <iostream>
 
 using namespace std;
