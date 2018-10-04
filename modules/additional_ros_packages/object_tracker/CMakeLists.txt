@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(test_tensorflow)
 
-find_package(catkin REQUIRED COMPONENTS tensorflow_ercatkin)
+find_package(catkin REQUIRED COMPONENTS tensorflow_catkin)
 
-catkin_package(CATKIN_DEPENDS tensorflowerre_catkin)
+catkin_package(CATKIN_DEPENDS tensorflow_catkin)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
