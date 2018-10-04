@@ -13,7 +13,7 @@ link_directories(/home/tmp/ros/lib)
 add_library(tensorflow_catkin SHARED IMPORTED) # or STATIC instead of SHARED
 set_target_properties(tensorflow_catkin PROPERTIES
         IMPORTED_LOCATION "/home/tmp/ros/lib/libtensorflow_catkin.so"
-#        INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/include/libbar"
+        INTERFACE_INCLUDE_DIRECTORIES "/apollo/modules/devel_isolated/tensorflow_catkin/include/tensorflow"
         )
 
 

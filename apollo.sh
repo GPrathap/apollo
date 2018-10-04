@@ -491,7 +491,7 @@ function build_additional_ros_packages() {
 
   rm -rf modules/.catkin_workspace
   rm -rf modules/build_isolated/
-  rm -rf modules/devel_isolated/
+  #rm -rf modules/devel_isolated/
 }
 
 
