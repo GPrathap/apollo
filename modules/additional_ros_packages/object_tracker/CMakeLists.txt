@@ -7,7 +7,7 @@ catkin_package(CATKIN_DEPENDS tensorflow_catkin)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-message( ${catkin_LIBRARIES})
+message("----------------------------" ${catkin_LIBRARIES})
 link_directories(/home/tmp/ros/lib)
 # add the publisher example
 add_executable(test_tensorflow src/example.cpp)
