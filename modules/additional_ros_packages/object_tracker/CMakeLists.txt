@@ -7,6 +7,7 @@ catkin_package(CATKIN_DEPENDS tensorflow_catkin)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
+message("----------------------------" ${catkin_LIBRARIES})
 # add the publisher example
 add_executable(test_tensorflow src/example.cpp)
 add_dependencies(test_tensorflow ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
