@@ -1,6 +1,9 @@
 #include <tensorflow/core/protobuf/meta_graph.pb.h>
 #include <tensorflow/core/public/session.h>
 #include <tensorflow/core/public/session_options.h>
+#include <tensorflow/cc/client/client_session.h>
+#include <tensorflow/cc/ops/standard_ops.h>
+#include <tensorflow/core/framework/tensor.h>
 #include <iostream>
 #include <string>
 
@@ -67,26 +70,26 @@ tensorflow::Status LoadModel(tensorflow::Session *sess, std::string graph_fn,
 }
 
 int main(int argc, char const *argv[]) {
-    const std::string graph_fn = "/dataset/model/model-30000.meta";
-    const std::string checkpoint_fn = "/dataset/model/model-30000";
-
-    // prepare session
-    tensorflow::Session *sess;
-    tensorflow::SessionOptions options;
-    TF_CHECK_OK(tensorflow::NewSession(options, &sess));
-    TF_CHECK_OK(LoadModel(sess, graph_fn, checkpoint_fn));
-
-    // prepare inputs
-    tensorflow::TensorShape data_shape({1, 2});
-    tensorflow::Tensor data(tensorflow::DT_FLOAT, data_shape);
-
-    // same as in python file
-    auto data_ = data.flat<float>().data();
-    for (int i = 0; i < 2; ++i) data_[i] = 1;
-
-    tensor_dict feed_dict = {
-            {"input", data},
-    };
+//    const std::string graph_fn = "/dataset/model/model-30000.meta";
+//    const std::string checkpoint_fn = "/dataset/model/model-30000";
+//
+//    // prepare session
+//    tensorflow::Session *sess;
+//    tensorflow::SessionOptions options;
+//    TF_CHECK_OK(tensorflow::NewSession(options, &sess));
+//    TF_CHECK_OK(LoadModel(sess, graph_fn, checkpoint_fn));
+//
+//    // prepare inputs
+//    tensorflow::TensorShape data_shape({1, 2});
+//    tensorflow::Tensor data(tensorflow::DT_FLOAT, data_shape);
+//
+//    // same as in python file
+//    auto data_ = data.flat<float>().data();
+//    for (int i = 0; i < 2; ++i) data_[i] = 1;
+//
+//    tensor_dict feed_dict = {
+//            {"input", data},
+//    };
 
 //    std::vector<tensorflow::Tensor> outputs;
 //    TF_CHECK_OK(sess->Run(feed_dict, {"output", "dense/kernel:0", "dense/bias:0"},
@@ -96,6 +99,23 @@ int main(int argc, char const *argv[]) {
 //    std::cout << "output          " << outputs[0].DebugString() << std::endl;
 //    std::cout << "dense/kernel:0  " << outputs[1].DebugString() << std::endl;
 //    std::cout << "dense/bias:0    " << outputs[2].DebugString() << std::endl;
+
+    using namespace tensorflow;
+    using namespace tensorflow::ops;
+    Scope root = Scope::NewRootScope();
+    // Matrix A = [3 2; -1 0]
+    auto A = Const(root, { {3.f, 2.f}, { -1.f, 0.f} });
+    // Vector b = [3 5]
+    auto b = Const(root, { {3.f, 5.f} });
+    // v = Ab^T
+    auto v = MatMul(root.WithOpName("v"), A, b, MatMul::TransposeB(true));
+    std::vector<Tensor> outputs;
+    ClientSession session(root);
+    // Run and fetch v
+    TF_CHECK_OK(session.Run({v}, &outputs));
+    // Expect outputs[0] == [19; -3]
+    LOG(INFO) << outputs[0].matrix<float>();
+    return 0;
 
     return 0;
 }
