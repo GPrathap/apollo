@@ -21,10 +21,13 @@ message("----------------------------" ${catkin_LIBRARIES})
 #        IMPORTED_LOCATION "/apollo/modules/devel_isolated/tensorflow_catkin/lib/libtensorflow.so"
 #        INTERFACE_INCLUDE_DIRECTORIES "/apollo/modules/devel_isolated/tensorflow_catkin/include/tensorflow")
 
+INCLUDE_DIRECTORIES(/apollo/modules/devel_isolated/tensorflow_catkin/include/)
+LINK_DIRECTORIES(/apollo/modules/devel_isolated/tensorflow_catkin/lib/)
+
 # add the publisher example
 add_executable(test_tensorflow src/example.cpp)
 add_dependencies(test_tensorflow ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
-target_link_libraries(test_tensorflow)
+target_link_libraries(test_tensorflow tensorflow)
 
 # Mark executables and/or libraries for installation
 install(TARGETS test_tensorflow
