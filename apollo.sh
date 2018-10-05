@@ -482,7 +482,7 @@ function build_additional_ros_packages() {
   source "${ROS_PATH}/setup.bash"
   cd modules
   var1 = $1
-  install_packages="additional_ros_packages
+  install_packages="additional_ros_packages"
   if [ $# -eq 1 ]
   then
     install_packages = "$install_packages/$var1"
