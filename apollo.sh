@@ -497,7 +497,7 @@ function build_additional_ros_packages() {
   rm -rf modules/build_isolated/
   if [ $# -eq 1 ]
   then
-    if [ $1 eq "tensorflow_catkin" ]
+    if [ "$1" = "tensorflow_catkin" ]
     then
         mkdir -p /home/tmp/ros/include/tensorflow_catkin
         mkdir -p /home/tmp/ros/lib/tensorflow_catkin
