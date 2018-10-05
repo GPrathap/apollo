@@ -179,10 +179,10 @@ macro(cs_install)
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
   if(EXISTS ${${PROJECT_NAME}_LOCAL_INCLUDE_DIR})
-    # Install include directory
+    # Install include directory DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
     message(STATUS "Marking HEADER FILES in \"include\" folder of package \"${PROJECT_NAME}\" for installation")
     install(DIRECTORY ${${PROJECT_NAME}_LOCAL_INCLUDE_DIR}/
-      DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+      DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
       FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
       PATTERN ".svn" EXCLUDE
     )

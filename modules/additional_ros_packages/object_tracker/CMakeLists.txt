@@ -1,21 +1,25 @@
 cmake_minimum_required(VERSION 2.8)
 project(test_tensorflow)
 
-find_package(catkin REQUIRED COMPONENTS tensorflow_catkin)
+find_package(catkin REQUIRED COMPONENTS)
 
-catkin_package(CATKIN_DEPENDS tensorflow_catkin)
+#catkin_package(CATKIN_DEPENDS tensorflow_catkin)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 message("----------------------------" ${catkin_LIBRARIES})
-link_directories(/home/tmp/ros/lib)
+#link_directories(/home/tmp/ros/lib)
+
+#foreach( DIR CIWT connected_components external libelas libviso2 scene_segmentation sun_utils tracking )
+#    message( STATUS "  - include/" ${DIR} )
+#    include_directories( "src/${DIR}" )
+#    link_directories("src/${DIR}")
+#endforeach()
 
 add_library(tensorflow_catkin SHARED IMPORTED) # or STATIC instead of SHARED
 set_target_properties(tensorflow_catkin PROPERTIES
-        IMPORTED_LOCATION "/home/tmp/ros/lib/libtensorflow_catkin.so"
-        INTERFACE_INCLUDE_DIRECTORIES "/apollo/modules/devel_isolated/tensorflow_catkin/include/tensorflow"
-        )
-
+        IMPORTED_LOCATION "/apollo/modules/devel_isolated/tensorflow_catkin/lib/libtensorflow.so"
+        INTERFACE_INCLUDE_DIRECTORIES "/apollo/modules/devel_isolated/tensorflow_catkin/include/tensorflow")
 
 # add the publisher example
 add_executable(test_tensorflow src/example.cpp)
