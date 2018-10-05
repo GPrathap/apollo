@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(test_tensorflow)
 
+add_definitions("-O3 -w -Wall -c -fmessage-length=0 -MMD -MP -std=c++11")
+
 find_package(catkin REQUIRED COMPONENTS)
 
 catkin_package(CATKIN_DEPENDS)
