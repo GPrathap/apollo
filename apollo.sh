@@ -479,14 +479,11 @@ function build_additional_ros_packages() {
     warning "ROS not found. Run apolllo.sh build first."
     exit 1
   fi
-
   source "${ROS_PATH}/setup.bash"
-
   cd modules
-
-  var1=$1
+  var1=$2
   install_packages="additional_ros_packages"
-  if [ "$#" -eq 1 ]
+  if [ "$#" -eq 2 ]
   then
     if [ -d $var1 ]
     then
@@ -500,7 +497,6 @@ function build_additional_ros_packages() {
     --cmake-args --no-warn-unused-cli
   find "${ROS_PATH}" -name "*.pyc" -print0 | xargs -0 rm -rf
   cd -
-
   rm -rf modules/.catkin_workspace
   rm -rf modules/build_isolated/
   #rm -rf modules/devel_isolated/
@@ -700,7 +696,7 @@ function main() {
       build_pylon_cam
       ;;
     build_additional_ros_packages)
-      build_additional_ros_packages
+      build_additional_ros_packages $@
       ;;
     build_usbcam)
       build_usbcam
