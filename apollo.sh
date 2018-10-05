@@ -495,6 +495,18 @@ function build_additional_ros_packages() {
   cd -
   rm -rf modules/.catkin_workspace
   rm -rf modules/build_isolated/
+  if [ $# -eq 1 ]
+  then
+    if [ $1 eq "tensorflow_catkin" ]
+    then
+        mkdir -p /home/tmp/ros/include/tensorflow_catkin
+        mkdir -p /home/tmp/ros/lib/tensorflow_catkin
+        mkdir -p /home/tmp/ros/share/tensorflow_catkin
+        cp -Rf modules/devel_isolated/tensorflow_catkin/include /home/tmp/ros/include/tensorflow_catkin
+        cp -Rf modules/devel_isolated/tensorflow_catkin/lib /home/tmp/ros/lib/tensorflow_catkin
+        cp -Rf modules/devel_isolated/tensorflow_catkin/share /home/tmp/ros/share/tensorflow_catkin
+    fi
+  fi
   #rm -rf modules/devel_isolated/
 }
 

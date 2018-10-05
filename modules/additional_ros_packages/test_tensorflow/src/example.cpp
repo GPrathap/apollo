@@ -1,81 +1,101 @@
+#include <tensorflow/core/protobuf/meta_graph.pb.h>
 #include <tensorflow/core/public/session.h>
-#include <tensorflow/core/platform/env.h>
+#include <tensorflow/core/public/session_options.h>
 #include <iostream>
+#include <string>
 
-using namespace std;
-using namespace tensorflow;
+typedef std::vector<std::pair<std::string, tensorflow::Tensor>> tensor_dict;
 
-int main(int argc, char* argv[]) {
-    // Initialize a tensorflow session
-    Session* session;
-    Status status = NewSession(SessionOptions(), &session);
-    if (!status.ok()) {
-        std::cerr << status.ToString() << std::endl;
-        return 1;
+/**
+ * @brief load a previous store model
+ * @details [long description]
+ *
+ * in Python run:
+ *
+ *    saver = tf.train.Saver(tf.global_variables())
+ *    saver.save(sess, './exported/my_model')
+ *    tf.train.write_graph(sess.graph, '.', './exported/graph.pb, as_text=False)
+ *
+ * this relies on a graph which has an operation called `init` responsible to
+ * initialize all variables, eg.
+ *
+ *    sess.run(tf.global_variables_initializer())  # somewhere in the python
+ * file
+ *
+ * @param sess active tensorflow session
+ * @param graph_fn path to graph file (eg. "./exported/graph.pb")
+ * @param checkpoint_fn path to checkpoint file (eg. "./exported/my_model",
+ * optional)
+ * @return status of reloading
+ */
+tensorflow::Status LoadModel(tensorflow::Session *sess, std::string graph_fn,
+                             std::string checkpoint_fn = "") {
+    tensorflow::Status status;
+
+    // Read in the protobuf graph we exported
+    tensorflow::MetaGraphDef graph_def;
+    status = ReadBinaryProto(tensorflow::Env::Default(), graph_fn, &graph_def);
+    if (status != tensorflow::Status::OK()) return status;
+
+    // create the graph in the current session
+    status = sess->Create(graph_def.graph_def());
+    if (status != tensorflow::Status::OK()) return status;
+
+    // restore model from checkpoint, iff checkpoint is given
+    if (checkpoint_fn != "") {
+        const std::string restore_op_name = graph_def.saver_def().restore_op_name();
+        const std::string filename_tensor_name =
+                graph_def.saver_def().filename_tensor_name();
+
+        tensorflow::Tensor filename_tensor(tensorflow::DT_STRING,
+                                           tensorflow::TensorShape());
+        filename_tensor.scalar<std::string>()() = checkpoint_fn;
+
+        tensor_dict feed_dict = {{filename_tensor_name, filename_tensor}};
+        status = sess->Run(feed_dict, {}, {restore_op_name}, nullptr);
+        if (status != tensorflow::Status::OK()) return status;
     } else {
-        std::cout << "Session created successfully" << std::endl;
+        // virtual Status Run(const std::vector<std::pair<string, Tensor> >& inputs,
+        //                  const std::vector<string>& output_tensor_names,
+        //                  const std::vector<string>& target_node_names,
+        //                  std::vector<Tensor>* outputs) = 0;
+        status = sess->Run({}, {}, {"init"}, nullptr);
+        if (status != tensorflow::Status::OK()) return status;
     }
 
-    // Load the protobuf graph
-    GraphDef graph_def;
-    std::string graph_path = argv[1];
-    status = ReadBinaryProto(Env::Default(), graph_path, &graph_def);
-    if (!status.ok()) {
-        std::cerr << status.ToString() << std::endl;
-        return 1;
-    } else {
-        std::cout << "Load graph protobuf successfully" << std::endl;
-    }
+    return tensorflow::Status::OK();
+}
 
-    // Add the graph to the session
-    status = session->Create(graph_def);
-    if (!status.ok()) {
-        std::cerr << status.ToString() << std::endl;
-        return 1;
-    } else {
-        std::cout << "Add graph to session successfully" << std::endl;
-    }
+int main(int argc, char const *argv[]) {
+    const std::string graph_fn = "/dataset/model/model-30000.meta";
+    const std::string checkpoint_fn = "/dataset/model/model-30000";
 
-    // Setup inputs and outputs:
+    // prepare session
+    tensorflow::Session *sess;
+    tensorflow::SessionOptions options;
+    TF_CHECK_OK(tensorflow::NewSession(options, &sess));
+    TF_CHECK_OK(LoadModel(sess, graph_fn, checkpoint_fn));
 
-    // Our graph doesn't require any inputs, since it specifies default values,
-    // but we'll change an input to demonstrate.
-    Tensor a(DT_FLOAT, TensorShape());
-    a.scalar<float>()() = 3.0;
+    // prepare inputs
+    tensorflow::TensorShape data_shape({1, 2});
+    tensorflow::Tensor data(tensorflow::DT_FLOAT, data_shape);
 
-    Tensor b(DT_FLOAT, TensorShape());
-    b.scalar<float>()() = 2.0;
+    // same as in python file
+    auto data_ = data.flat<float>().data();
+    for (int i = 0; i < 2; ++i) data_[i] = 1;
 
-    std::vector<std::pair<string, tensorflow::Tensor>> inputs = {
-            { "a", a },
-            { "b", b },
+    tensor_dict feed_dict = {
+            {"input", data},
     };
 
-    // The session will initialize the outputs
-    std::vector<tensorflow::Tensor> outputs;
-
-    // Run the session, evaluating our "c" operation from the graph
-    status = session->Run(inputs, {"c"}, {}, &outputs);
-    if (!status.ok()) {
-        std::cerr << status.ToString() << std::endl;
-        return 1;
-    } else {
-        std::cout << "Run session successfully" << std::endl;
-    }
-
-    // Grab the first output (we only evaluated one graph node: "c")
-    // and convert the node to a scalar representation.
-    auto output_c = outputs[0].scalar<float>();
-
-    // (There are similar methods for vectors and matrices here:
-    // https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/public/tensor.h)
-
-    // Print the results
-    std::cout << outputs[0].DebugString() << std::endl; // Tensor<type: float shape: [] values: 30>
-    std::cout << "output value: " << output_c() << std::endl; // 30
-
-    // Free any resources used by the session
-    session->Close();
+//    std::vector<tensorflow::Tensor> outputs;
+//    TF_CHECK_OK(sess->Run(feed_dict, {"output", "dense/kernel:0", "dense/bias:0"},
+//                          {}, &outputs));
+//
+//    std::cout << "input           " << data.DebugString() << std::endl;
+//    std::cout << "output          " << outputs[0].DebugString() << std::endl;
+//    std::cout << "dense/kernel:0  " << outputs[1].DebugString() << std::endl;
+//    std::cout << "dense/bias:0    " << outputs[2].DebugString() << std::endl;
 
     return 0;
 }
