@@ -481,11 +481,10 @@ function build_additional_ros_packages() {
   fi
   source "${ROS_PATH}/setup.bash"
   cd modules
-  var1 = $1
   install_packages="additional_ros_packages"
   if [ $# -eq 1 ]
   then
-    install_packages = "$install_packages/$var1"
+    install_packages="$install_packages/$1"
   fi
   echo "Location going ot search ros packages : $install_packages"
 
