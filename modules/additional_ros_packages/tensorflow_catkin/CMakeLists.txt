@@ -22,8 +22,8 @@ endif()
 
 file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/include)
 
-ExternalProject_Add(tensorflow
-  SOURCE_DIR /root/software/
+ExternalProject_Add(tensorflow_src
+  GIT_REPOSITORY https://github.com/tensorflow/tensorflow.git
   GIT_TAG c1d223de41838e9d387a48137c76ea39d3b38f3f
   PATCH_COMMAND bash -c "for i in ${PROJECT_SOURCE_DIR}/patches/*.patch\$<SEMICOLON> do git apply -p1 $i\$<SEMICOLON> done"
   UPDATE_COMMAND ""
@@ -52,7 +52,7 @@ ExternalProject_Add(tensorflow
     -Dtensorflow_PATH_STATIC_LIB=/usr/local/cuda-8.0/lib64
     -Dtensorflow_CUDA_LIBRARY_PATH=/usr/local/cuda-8.0/lib64
     -DCUDA_CUDA_LIBRARY=/usr/local/cuda-8.0/lib64/stubs/libcuda.so
-    -Dtensorflow_PATH_NCCL_STATIC_LIB=/root/software/nccl/build/lib
+    -Dtensorflow_PATH_NCCL_STATIC_LIB=/usr/lib/x86_64-linux-gnu
     -Dtensorflow_CUDNN_INCLUDE=/usr/include/x86_64-linux-gnu
     -Dtensorflow_PATH_CUDNN_STATIC_LIB=/usr/lib/x86_64-linux-gnu
     -Dtensorflow_CUDA_VERSION=8.0
