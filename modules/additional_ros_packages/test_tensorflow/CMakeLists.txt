@@ -15,7 +15,7 @@ INCLUDE_DIRECTORIES(/home/tmp/ros/include/tensorflow_catkin/include/)
 LINK_DIRECTORIES(/home/tmp/ros/lib/tensorflow_catkin/lib/)
 # export LD_LIBRARY_PATH=/apollo/modules/devel_isolated/tensorflow_catkin/lib/${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 # add the publisher example
-add_executable(test_tensorflow src/example.cpp)
+add_executable(test_tensorflow src/example2.cpp)
 add_dependencies(test_tensorflow ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 target_link_libraries(test_tensorflow tensorflow)
 

@@ -43,10 +43,12 @@
 #include "modules/perception/obstacle/base/types.h"
 #include "modules/perception/obstacle/camera/converter/geometry_camera_converter.h"
 #include "modules/perception/obstacle/camera/detector/yolo_camera_detector/yolo_camera_detector.h"
+#include "modules/perception/obstacle/camera/depth_estimator/flaren_depth_estimator/flaren_depth_estimator.h"
 #include "modules/perception/obstacle/camera/dummy/dummy_algorithms.h"
 #include "modules/perception/obstacle/camera/filter/object_camera_filter.h"
 #include "modules/perception/obstacle/camera/interface/base_camera_converter.h"
 #include "modules/perception/obstacle/camera/interface/base_camera_detector.h"
+#include "modules/perception/obstacle/camera/interface/base_camera_depth_estimator.h"
 #include "modules/perception/obstacle/camera/interface/base_camera_filter.h"
 #include "modules/perception/obstacle/camera/interface/base_camera_tracker.h"
 #include "modules/perception/obstacle/camera/interface/base_camera_transformer.h"
@@ -142,6 +144,7 @@ namespace apollo {
 
             // Modules
             std::unique_ptr<BaseCameraDetector> detector_;
+            std::unique_ptr<BaseCameraDepthEstimator> depth_estimator;
             std::unique_ptr<BaseCameraConverter> converter_;
             std::unique_ptr<BaseCameraTracker> tracker_;
             std::unique_ptr<BaseCameraTransformer> transformer_;

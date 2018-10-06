@@ -247,8 +247,8 @@ int main(int argc, char* argv[]) {
             "tensorflow/examples/label_image/data/inception_v3_2016_08_28_frozen.pb";
     string labels =
             "tensorflow/examples/label_image/data/imagenet_slim_labels.txt";
-    int32 input_width = 299;
-    int32 input_height = 299;
+    int32 input_width = 512;
+    int32 input_height = 256;
     float input_mean = 0;
     float input_std = 255;
     string input_layer = "input";
@@ -314,12 +314,11 @@ int main(int argc, char* argv[]) {
     if (!run_status.ok()) {
         LOG(ERROR) << "Running model failed: " << run_status;
         return -1;
+    }else{
+        std::cout<<"Model loading is successful"<<std::endl;
     }
-
-    // This is for automated testing to make sure we get the expected result with
-    // the default settings. We know that label 653 (military uniform) should be
-    // the top label for the Admiral Hopper image.
-    if (self_test) {
+    /***
+     *     if (self_test) {
         bool expected_matches;
         Status check_status = CheckTopLabel(outputs, 653, &expected_matches);
         if (!check_status.ok()) {
@@ -338,6 +337,12 @@ int main(int argc, char* argv[]) {
         LOG(ERROR) << "Running print failed: " << print_status;
         return -1;
     }
+
+     */
+
+    // This is for automated testing to make sure we get the expected result with
+    // the default settings. We know that label 653 (military uniform) should be
+    // the top label for the Admiral Hopper image.
 
     return 0;
 }

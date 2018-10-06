@@ -116,6 +116,7 @@ namespace apollo {
 
         bool PylonCameraProcessSubnode::InitModules() {
           RegisterFactoryYoloCameraDetector();
+          RegisterFactoryFlarenDepthEstimator();
           RegisterFactoryGeometryCameraConverter();
           RegisterFactoryCascadedCameraTracker();
           RegisterFactoryFlatCameraTransformer();
