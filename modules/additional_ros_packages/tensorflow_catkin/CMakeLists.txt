@@ -53,7 +53,7 @@ ExternalProject_Add(tensorflow_src
     -Dtensorflow_CUDA_LIBRARY_PATH=/usr/local/cuda-8.0/lib64
     -DCUDA_CUDA_LIBRARY=/usr/local/cuda-8.0/lib64/stubs/libcuda.so
     -Dtensorflow_PATH_NCCL_STATIC_LIB=/usr/lib/x86_64-linux-gnu
-    -Dtensorflow_CUDNN_INCLUDE=/usr/include/x86_64-linux-gnu
+    -Dtensorflow_CUDNN_INCLUDE=/usr/include
     -Dtensorflow_PATH_CUDNN_STATIC_LIB=/usr/lib/x86_64-linux-gnu
     -Dtensorflow_CUDA_VERSION=8.0
     -Dtensorflow_CUDNN_VERSION=7.1.4
