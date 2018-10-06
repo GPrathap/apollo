@@ -4,7 +4,7 @@ project(tensorflow_catkin)
 find_package(catkin_simple REQUIRED)
 catkin_simple()
 
-set(USE_GPU OFF CACHE BOOL "Build Tensorflow with GPU support")
+set(USE_GPU ON CACHE BOOL "Build Tensorflow with GPU support")
 set(CUDA_ROOT $ENV{CUDA_ROOT} CACHE PATH "CUDA root directory")
 set(CUDNN_ROOT $ENV{CUDNN_ROOT} CACHE PATH "CUDNN root directory")
 set(NCCL_ROOT $ENV{NCCL_ROOT} CACHE PATH "NCCL root directory")
@@ -49,14 +49,14 @@ ExternalProject_Add(tensorflow_src
     -Dtensorflow_OPTIMIZE_FOR_NATIVE_ARCH=OFF
     # GPU-specific options
     -Dtensorflow_ENABLE_GPU=${USE_GPU}
-    -Dtensorflow_PATH_STATIC_LIB=${CUDA_ROOT}/lib64
-    -Dtensorflow_CUDA_LIBRARY_PATH=${CUDA_ROOT}/lib64
-    -DCUDA_CUDA_LIBRARY=${CUDA_ROOT}/lib64/stubs/libcuda.so
-    -Dtensorflow_PATH_NCCL_STATIC_LIB=${NCCL_ROOT}/lib
-    -Dtensorflow_CUDNN_INCLUDE=${CUDNN_ROOT}/include
-    -Dtensorflow_PATH_CUDNN_STATIC_LIB=${CUDNN_ROOT}/lib64
-    -Dtensorflow_CUDA_VERSION=${CUDA_VERSION}
-    -Dtensorflow_CUDNN_VERSION=${CUDNN_VERSION}
+    -Dtensorflow_PATH_STATIC_LIB=/usr/local/cuda-8.0/lib64
+    -Dtensorflow_CUDA_LIBRARY_PATH=/usr/local/cuda-8.0/lib64
+    -DCUDA_CUDA_LIBRARY=/usr/local/cuda-8.0/lib64/stubs/libcuda.so
+    -Dtensorflow_PATH_NCCL_STATIC_LIB=/root/software/nccl/build/lib
+    -Dtensorflow_CUDNN_INCLUDE=/usr/include/x86_64-linux-gnu
+    -Dtensorflow_PATH_CUDNN_STATIC_LIB=/usr/lib/x86_64-linux-gnu
+    -Dtensorflow_CUDA_VERSION=7.1.4
+    -Dtensorflow_CUDNN_VERSION=8.0.61
 )
 
 cs_add_library(${PROJECT_NAME} src/dependency_tracker.cc)
