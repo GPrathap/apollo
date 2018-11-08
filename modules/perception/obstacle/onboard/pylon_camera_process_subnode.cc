@@ -148,7 +148,7 @@ namespace apollo {
 
         void PylonCameraProcessSubnode::ImgCallback(const sensor_msgs::Image &message) {
           double timestamp = message.header.stamp.toSec();
-          ADEBUG << "PylonCameraProcessSubnode ImgCallback: timestamp: ";
+          ADEBUG << "Pylon Camera Process Subnode ImgCallback: timestamp: ";
           ADEBUG << std::fixed << std::setprecision(64) << timestamp;
           AINFO << "camera received image : " << GLOG_TIMESTAMP(timestamp)
                 << " at time: " << GLOG_TIMESTAMP(TimeUtil::GetCurrentTime());

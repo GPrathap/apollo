@@ -486,7 +486,7 @@ function build_additional_ros_packages() {
   then
     install_packages="$install_packages/$1"
   fi
-  echo "Location going ot search ros packages : $install_packages"
+  echo "Location going to search ros packages : $install_packages"
 
   catkin_make_isolated --install --source $install_packages \
     --install-space "${ROS_PATH}" -DCMAKE_BUILD_TYPE=Release -DSETUPTOOLS_DEB_LAYOUT=OFF \
@@ -507,7 +507,7 @@ function build_additional_ros_packages() {
         cp -Rf modules/devel_isolated/tensorflow_catkin/share /home/tmp/ros/share/tensorflow_catkin
     fi
   fi
-  #rm -rf modules/devel_isolated/
+  rm -rf modules/devel_isolated/
 }
 
 
